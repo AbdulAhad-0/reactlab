@@ -1,5 +1,11 @@
 const express = require("express");
 
+
+const tasks = [
+  { id: 1, title: "End your work on time", done: true },
+  { id: 2, title: "Start your business on time", done: false },
+  { id: 3, title: "Finish your task on time", done: true }
+];
 const app = express();
 const PORT = 3000;
 app.listen(PORT, () => {
@@ -18,3 +24,17 @@ app.get("/health",(req,res)=>{
         status:"ok",
     });
 });
+app.get("/tasks",(req,res)=>{
+    res.json(tasks)
+})
+app.get("/tasks/:id",(req,res)=>{
+    const id=Number(req.params.id)
+    const task =tasks.find(task=>task.id===id)
+     if (!task) {
+    return res.status(404).json({
+      error: "Task 99 not found"
+    });
+  }
+
+  res.json(task);
+})
