@@ -42,7 +42,7 @@ app.get("/tasks/:id",(req,res)=>{
 app.post("/tasks",(req,res)=>{
     const {title}=req.body;
     if(!title||title.trim()===''){
-        res.status(400).json({
+        return res.status(400).json({
             error:"title not found",
         });
     }
@@ -51,3 +51,38 @@ app.post("/tasks",(req,res)=>{
     res.status(201).json(task);
 
 })
+
+app.put("/tasks/:id",(req,res)=>{
+    const id = Number(req.params.id);
+    const {title,done}=req.body;
+    if(!title||title.trim()===''){
+        return res.status(400).json({
+            error:"title not found",
+        });
+    }
+    const t=tasks.find(task=>task.id===id)
+    if(!t){
+        return res.status(404).json({
+            error:"Unknown id",
+        });
+    }
+    t.title=title;
+    t.done=done;
+    res.json(t);
+});
+
+app.delete("/tasks/:id", (req, res) => {
+  const id = Number(req.params.id);
+
+  const index = tasks.findIndex(task => task.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      error: `Task ${id} not found`
+    });
+  }
+
+  tasks.splice(index, 1);
+
+  res.status(204).send();
+});
