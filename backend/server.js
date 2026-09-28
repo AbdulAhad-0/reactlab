@@ -7,6 +7,7 @@ const tasks = [
   { id: 3, title: "Finish your task on time", done: true }
 ];
 const app = express();
+app.use(express.json());
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
@@ -37,4 +38,16 @@ app.get("/tasks/:id",(req,res)=>{
   }
 
   res.json(task);
+})
+app.post("/tasks",(req,res)=>{
+    const {title}=req.body;
+    if(!title||title.trim()===''){
+        res.status(400).json({
+            error:"title not found",
+        });
+    }
+    const task={id:tasks.length+1,title:title,done:false}
+    tasks.push(task)
+    res.status(201).json(task);
+
 })
